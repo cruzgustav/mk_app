@@ -53,17 +53,23 @@ function generateId(): string {
 // ---- Load / Save ----
 
 /**
- * Load catalog: API (arquivo do projeto) > static JSON > localStorage.
- * Prioridade: API é a fonte de verdade. localStorage só em emergência.
+ * Load catalog: API (KV) > localStorage > static JSON.
+ * 
+ * Ordem de prioridade:
+ * 1. API (KV) — fonte de verdade quando disponível
+ * 2. localStorage — preserva edições do admin quando KV não está configurado
+ * 3. static JSON — fallback inicial (nunca sobrescreve localStorage)
  */
 export async function loadCatalog(): Promise<Catalog> {
-  // 1. Try API (primary — reads from project file)
+  // 1. Try API (KV — fonte de verdade quando disponível)
   try {
     const res = await fetch(API_URL);
     if (res.ok) {
-      const catalog = (await res.json()) as Catalog;
-      if (catalog.settings && catalog.categories && catalog.products && catalog.skinTones) {
-        // Sync to localStorage as cache
+      const data = await res.json();
+      // Verifica se é dados reais do KV (não erro 404)
+      if (data && !data.error && data.settings && data.categories && data.products && data.skinTones) {
+        const catalog = data as Catalog;
+        // Sync to localStorage como cache
         try { localStorage.setItem(STORAGE_KEY, JSON.stringify(catalog)); } catch {}
         return catalog;
       }
@@ -72,7 +78,20 @@ export async function loadCatalog(): Promise<Catalog> {
     // API not available, fall through
   }
 
-  // 2. Fallback to static JSON (production Cloudflare Pages)
+  // 2. localStorage — preserva edições do admin (funciona sem KV)
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      const parsed = JSON.parse(stored) as Catalog;
+      if (parsed.settings && parsed.categories && parsed.products && parsed.skinTones) {
+        return parsed;
+      }
+    }
+  } catch {
+    // corrupted, fall through
+  }
+
+  // 3. Fallback: static JSON (apenas inicialização, nunca sobrescreve localStorage)
   try {
     const res = await fetch(CATALOG_URL);
     if (res.ok) {
@@ -84,20 +103,7 @@ export async function loadCatalog(): Promise<Catalog> {
       }
     }
   } catch {
-    // static JSON not available, fall through
-  }
-
-  // 3. Last resort: localStorage (offline backup)
-  try {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored) {
-      const parsed = JSON.parse(stored) as Catalog;
-      if (parsed.settings && parsed.categories && parsed.products && parsed.skinTones) {
-        return parsed;
-      }
-    }
-  } catch {
-    // corrupted, give up
+    // static JSON not available, give up
   }
 
   throw new Error('Não foi possível carregar o catálogo. Verifique sua conexão.');
