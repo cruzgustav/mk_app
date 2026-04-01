@@ -9,6 +9,6 @@ pages_build_output_dir = ".vercel/output/static"
 # Variable name: CATALOG_KV → KV namespace que você criou
 #
 # Dica: Você também pode configurar o binding aqui:
-# [[kv_namespaces]]
-# binding = "CATALOG_KV"
-# id = "SEU_KV_NAMESPACE_ID"
+[[kv_namespaces]]
+binding = "CATALOG_KV"
+id = "9b44fbff7af34aaa89e350c429b30e35"
