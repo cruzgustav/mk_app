@@ -1,0 +1,34 @@
+{
+  "settings": {
+    "password": "Skin@2026!Admin#Pro",
+    "displayLimit": 6
+  },
+  "categories": [
+    { "id": "base", "name": "Base", "icon": "droplets" },
+    { "id": "corretivo", "name": "Corretivo", "icon": "circle" },
+    { "id": "po", "name": "Pó", "icon": "sparkles" },
+    { "id": "blush", "name": "Blush", "icon": "heart" },
+    { "id": "iluminador", "name": "Iluminador", "icon": "sun" },
+    { "id": "primer", "name": "Primer", "icon": "layers" },
+    { "id": "contorno", "name": "Contorno", "icon": "palette" },
+    { "id": "fixador", "name": "Fixador", "icon": "wind" }
+  ],
+  "products": [],
+  "skinTones": [
+    { "id": "fair-cool", "undertone": "Cool", "depth": "Fair", "colorHex": "#F5DEE0", "colorName": "Branco Neve Rosado" },
+    { "id": "fair-warm", "undertone": "Warm", "depth": "Fair", "colorHex": "#F7E5D0", "colorName": "Branco Neve Dourado" },
+    { "id": "fair-neutral", "undertone": "Neutral", "depth": "Fair", "colorHex": "#F5E6DC", "colorName": "Branco Neve Natural" },
+    { "id": "light-cool", "undertone": "Cool", "depth": "Light", "colorHex": "#E8C4C8", "colorName": "Bege Rosado Claro" },
+    { "id": "light-warm", "undertone": "Warm", "depth": "Light", "colorHex": "#EDCBA4", "colorName": "Bege Dourado Claro" },
+    { "id": "light-neutral", "undertone": "Neutral", "depth": "Light", "colorHex": "#EDCDB5", "colorName": "Bege Natural Claro" },
+    { "id": "medium-cool", "undertone": "Cool", "depth": "Medium", "colorHex": "#D4A09A", "colorName": "Bege Rosado Médio" },
+    { "id": "medium-warm", "undertone": "Warm", "depth": "Medium", "colorHex": "#D4A06A", "colorName": "Bege Dourado Médio" },
+    { "id": "medium-neutral", "undertone": "Neutral", "depth": "Medium", "colorHex": "#D4A688", "colorName": "Bege Natural Médio" },
+    { "id": "tan-cool", "undertone": "Cool", "depth": "Tan", "colorHex": "#A07878", "colorName": "Trufa Rosada" },
+    { "id": "tan-warm", "undertone": "Warm", "depth": "Tan", "colorHex": "#A07848", "colorName": "Caramelo Dourado" },
+    { "id": "tan-neutral", "undertone": "Neutral", "depth": "Tan", "colorHex": "#A07A60", "colorName": "Caramelo Natural" },
+    { "id": "deep-cool", "undertone": "Cool", "depth": "Deep", "colorHex": "#6B4848", "colorName": "Chocolate Rosado" },
+    { "id": "deep-warm", "undertone": "Warm", "depth": "Deep", "colorHex": "#6B4828", "colorName": "Chocolate Dourado" },
+    { "id": "deep-neutral", "undertone": "Neutral", "depth": "Deep", "colorHex": "#5C4033", "colorName": "Ébano Natural" }
+  ]
+}

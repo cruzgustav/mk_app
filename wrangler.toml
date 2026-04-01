@@ -1,0 +1,11 @@
+name = "base-perfeita"
+compatibility_date = "2024-12-01"
+compatibility_flags = ["nodejs_compat"]
+
+# KV namespace para o catálogo
+# PASSO 1: Crie o namespace rodando: npx wrangler kv namespace create "CATALOG_KV"
+# PASSO 2: Copie o ID gerado e cole abaixo
+[[kv_namespaces]]
+binding = "CATALOG_KV"
+id = 9b44fbff7af34aaa89e350c429b30e35
+

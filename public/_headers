@@ -1,0 +1,17 @@
+# Cloudflare Pages Headers
+# https://developers.cloudflare.com/pages/platform/headers/
+
+# Face-api models — cache longo (não mudam)
+/models/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Catálogo estático — cache curto (admin pode atualizar via KV)
+/data/catalog.json
+  Cache-Control: public, max-age=60
+
+# API routes — sem cache
+/api/*
+  Cache-Control: no-cache
+  Access-Control-Allow-Origin: *
+  Access-Control-Allow-Methods: GET, PUT, OPTIONS
+  Access-Control-Allow-Headers: Content-Type
