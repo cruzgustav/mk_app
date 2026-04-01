@@ -187,6 +187,8 @@ export default function AdminPanel() {
   const [stUndertone, setStUndertone] = useState<'Warm' | 'Cool' | 'Neutral'>('Warm');
   const [stDepth, setStDepth] = useState<'Fair' | 'Light' | 'Medium' | 'Tan' | 'Deep'>('Fair');
   const [stColorHex, setStColorHex] = useState('#E8BEAC');
+  const [stDescription, setStDescription] = useState('');
+  const [stTips, setStTips] = useState<string[]>([]);
 
   // Settings state
   const [newPassword, setNewPassword] = useState('');
@@ -297,6 +299,8 @@ export default function AdminPanel() {
     setStUndertone('Warm');
     setStDepth('Fair');
     setStColorHex('#E8BEAC');
+    setStDescription('');
+    setStTips([]);
     setSkinToneDialogOpen(true);
   };
 
@@ -306,6 +310,8 @@ export default function AdminPanel() {
     setStUndertone(tone.undertone);
     setStDepth(tone.depth);
     setStColorHex(tone.colorHex);
+    setStDescription(tone.description || '');
+    setStTips(tone.tips || []);
     setSkinToneDialogOpen(true);
   };
 
@@ -318,6 +324,8 @@ export default function AdminPanel() {
         undertone: stUndertone,
         depth: stDepth,
         colorHex: stColorHex,
+        description: stDescription.trim() || undefined,
+        tips: stTips.length ? stTips : undefined,
       });
       toast({ title: 'Tom atualizado', description: `"${stColorName.trim()}" foi salvo.` });
     } else {
@@ -326,6 +334,8 @@ export default function AdminPanel() {
         undertone: stUndertone,
         depth: stDepth,
         colorHex: stColorHex,
+        description: stDescription.trim() || undefined,
+        tips: stTips.length ? stTips : undefined,
       });
       toast({ title: 'Tom criado', description: `"${stColorName.trim()}" foi adicionado.` });
     }
@@ -1296,6 +1306,30 @@ export default function AdminPanel() {
                   className="w-full h-10 p-1 cursor-pointer"
                 />
               </div>
+            </div>
+            <div>
+              <Label className="text-xs text-slate-500">Descrição do Tom (aparece no resultado)</Label>
+              <textarea
+                className="mt-1 w-full rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800 resize-none focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+                rows={3}
+                placeholder="Ex: Uma base clara com subtons dourados, perfeita para peles..."
+                value={stDescription}
+                onChange={(e) => setStDescription(e.target.value)}
+              />
+            </div>
+            <div>
+              <Label className="text-xs text-slate-500">Dicas de Aplicação (uma por linha)</Label>
+              <textarea
+                className="mt-1 w-full rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800 resize-none focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent font-mono"
+                rows={4}
+                placeholder={"Hidrate bem a pele antes da aplicação.\nUse uma esponja úmida.\nAplique do centro para fora."}
+                value={stTips.join('\n')}
+                onChange={(e) => {
+                  const lines = e.target.value.split('\n').filter(l => l.trim());
+                  setStTips(lines);
+                }}
+              />
+              <p className="text-[10px] text-slate-400 mt-1">Uma dica por linha. Essas dicas aparecem no resultado para o usuário.</p>
             </div>
           </div>
           <DialogFooter>

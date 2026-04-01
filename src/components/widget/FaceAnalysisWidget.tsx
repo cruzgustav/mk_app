@@ -272,8 +272,8 @@ export default function FaceAnalysisWidget() {
       const skinTone = classifySkinTone(pixels);
       setSkinToneResult(skinTone);
 
-      // Recommend foundation
-      const foundation = recommendFoundation(skinTone);
+      // Recommend foundation (using catalog data for names, descriptions, tips)
+      const foundation = recommendFoundation(skinTone, catalog?.skinTones);
       setFoundationResult(foundation);
 
       // Find matching skin tone and its products
@@ -330,13 +330,13 @@ export default function FaceAnalysisWidget() {
   // =============================================
 
   const slideVariants = {
-    enter: { x: 60, opacity: 0 },
+    enter: { x: 40, opacity: 0.8 },
     center: { x: 0, opacity: 1 },
-    exit: { x: -60, opacity: 0 },
+    exit: { x: -40, opacity: 0.8 },
   };
 
   return (
-    <div className="w-full max-w-[480px] mx-auto pb-[env(safe-area-inset-bottom)]">
+    <div className="w-full sm:max-w-[480px] sm:mx-auto min-h-[calc(100dvh-env(safe-area-inset-bottom))] sm:min-h-0 flex flex-col sm:flex-none">
       {/* Hidden canvas for processing */}
       <canvas ref={canvasRef} className="hidden" />
 
@@ -349,15 +349,15 @@ export default function FaceAnalysisWidget() {
             initial="enter"
             animate="center"
             exit="exit"
-            transition={{ duration: 0.4, ease: 'easeInOut' }}
+            transition={{ duration: 0.25, ease: 'easeOut' }}
           >
-            <Card className="border-0 shadow-xl bg-white/80 backdrop-blur-sm overflow-hidden">
-              <div className="bg-gradient-to-br from-rose-400 via-pink-400 to-orange-300 p-5 sm:p-8 text-center">
+            <Card className="border-0 sm:shadow-xl sm:bg-white/80 sm:backdrop-blur-sm bg-white overflow-hidden flex-1 sm:flex-none flex flex-col sm:rounded-2xl rounded-none">
+              <div className="bg-gradient-to-br from-rose-400 via-pink-400 to-orange-300 p-5 sm:p-8 text-center shrink-0">
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
-                  className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-white/20 backdrop-blur-sm mb-4"
+                  className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-white/20 sm:backdrop-blur-sm mb-4"
                 >
                   <Sparkles className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
                 </motion.div>
@@ -439,9 +439,9 @@ export default function FaceAnalysisWidget() {
             initial="enter"
             animate="center"
             exit="exit"
-            transition={{ duration: 0.4, ease: 'easeInOut' }}
+            transition={{ duration: 0.25, ease: 'easeOut' }}
           >
-            <Card className="border-0 shadow-xl bg-white/80 backdrop-blur-sm overflow-hidden">
+            <Card className="border-0 sm:shadow-xl sm:bg-white/80 sm:backdrop-blur-sm bg-white overflow-hidden flex-1 sm:flex-none flex flex-col sm:rounded-2xl rounded-none">
               <div className="p-4 border-b border-rose-100 bg-gradient-to-r from-rose-50 to-orange-50">
                 <div className="flex items-center gap-2">
                   <Camera className="w-5 h-5 text-rose-500" />
@@ -644,9 +644,9 @@ export default function FaceAnalysisWidget() {
             initial="enter"
             animate="center"
             exit="exit"
-            transition={{ duration: 0.4, ease: 'easeInOut' }}
+            transition={{ duration: 0.25, ease: 'easeOut' }}
           >
-            <Card className="border-0 shadow-xl bg-white/80 backdrop-blur-sm overflow-hidden">
+            <Card className="border-0 sm:shadow-xl sm:bg-white/80 sm:backdrop-blur-sm bg-white overflow-hidden flex-1 sm:flex-none flex flex-col sm:rounded-2xl rounded-none">
               <div className="p-4 border-b border-rose-100 bg-gradient-to-r from-rose-50 to-orange-50">
                 <div className="flex items-center gap-2">
                   <Sun className="w-5 h-5 text-rose-500" />
@@ -773,9 +773,9 @@ export default function FaceAnalysisWidget() {
             initial="enter"
             animate="center"
             exit="exit"
-            transition={{ duration: 0.4, ease: 'easeInOut' }}
+            transition={{ duration: 0.25, ease: 'easeOut' }}
           >
-            <Card className="border-0 shadow-xl bg-white/80 backdrop-blur-sm overflow-hidden">
+            <Card className="border-0 sm:shadow-xl sm:bg-white/80 sm:backdrop-blur-sm bg-white overflow-hidden flex-1 sm:flex-none flex flex-col sm:rounded-2xl rounded-none">
               <CardContent className="p-5 sm:p-8 space-y-5 sm:space-y-6">
                 <div className="text-center space-y-4">
                   <motion.div
@@ -876,9 +876,9 @@ export default function FaceAnalysisWidget() {
             initial="enter"
             animate="center"
             exit="exit"
-            transition={{ duration: 0.4, ease: 'easeInOut' }}
+            transition={{ duration: 0.25, ease: 'easeOut' }}
           >
-            <Card className="border-0 shadow-xl bg-white/80 backdrop-blur-sm overflow-hidden">
+            <Card className="border-0 sm:shadow-xl sm:bg-white/80 sm:backdrop-blur-sm bg-white overflow-hidden flex-1 sm:flex-none flex flex-col sm:rounded-2xl rounded-none">
               {/* Header */}
               <div className="bg-gradient-to-br from-rose-400 via-pink-400 to-orange-300 p-5 text-center text-white">
                 <motion.div

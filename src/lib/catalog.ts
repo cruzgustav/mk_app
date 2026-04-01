@@ -26,6 +26,8 @@ export type SkinTone = {
   depth: 'Fair' | 'Light' | 'Medium' | 'Tan' | 'Deep';
   colorHex: string;
   colorName: string;
+  description?: string;
+  tips?: string[];
 };
 
 export type CatalogSettings = {

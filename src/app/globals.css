@@ -118,5 +118,13 @@
   }
   body {
     @apply bg-background text-foreground;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  /* Mobile performance: GPU acceleration for animations */
+  @media (max-width: 639px) {
+    * {
+      -webkit-tap-highlight-color: transparent;
+    }
   }
 }

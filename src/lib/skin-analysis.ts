@@ -459,15 +459,17 @@ export function classifySkinTone(rgbPixels: number[][]): SkinToneResult {
 // Foundation Recommendation
 // =============================================
 
-const COLOR_NAMES: Record<string, Record<string, string>> = {
-  Fair: { Cool: 'Branco Neve Rosado', Warm: 'Branco Neve Dourado', Neutral: 'Branco Neve Natural' },
-  Light: { Cool: 'Bege Rosado Claro', Warm: 'Bege Dourado Claro', Neutral: 'Bege Natural Claro' },
-  Medium: { Cool: 'Bege Rosado Médio', Warm: 'Bege Dourado Médio', Neutral: 'Bege Natural Médio' },
-  Tan: { Cool: 'Trufa Rosada', Warm: 'Caramelo Dourado', Neutral: 'Caramelo Natural' },
-  Deep: { Cool: 'Chocolate Rosado', Warm: 'Chocolate Dourado', Neutral: 'Ebano Natural' },
+export type SkinToneFromCatalog = {
+  undertone: 'Warm' | 'Cool' | 'Neutral';
+  depth: 'Fair' | 'Light' | 'Medium' | 'Tan' | 'Deep';
+  colorHex: string;
+  colorName: string;
+  description?: string;
+  tips?: string[];
 };
 
-const COLOR_DESCRIPTIONS: Record<string, Record<string, string>> = {
+// Default descriptions e tips (usados quando não há dados no catálogo)
+const DEFAULT_DESCRIPTIONS: Record<string, Record<string, string>> = {
   Fair: {
     Cool: 'Uma base muito clara com subtons rosados, ideal para peles extremamente claras com tendência rosada. Esse tom ajuda a neutralizar qualquer vermelhidão natural e traz um ar saudável ao rosto.',
     Warm: 'Uma base muito clara com subtons dourados, perfeita para peles claras com calor amarelado. Combine com iluminadores perolados para um acabamento luminoso e sofisticado.',
@@ -495,114 +497,46 @@ const COLOR_DESCRIPTIONS: Record<string, Record<string, string>> = {
   },
 };
 
-const APPLICATION_TIPS: Record<string, Record<string, string[]>> = {
+const DEFAULT_TIPS: Record<string, Record<string, string[]>> = {
   Fair: {
-    Cool: [
-      'Aplique a base em camadas finas para evitar efeito máscara.',
-      'Use um primer hidratante para manter a pele luminosa.',
-      'Escolha um corretivo um tom mais claro para a área dos olhos.',
-      'Finalize com pó translúcido para controle de brilho.',
-    ],
-    Warm: [
-      'Hidrate bem a pele antes da aplicação para um acabamento natural.',
-      'Use uma esponja úmida para uma cobertura mais uniforme.',
-      'Cuidado para não escolher tons acinzentados que deixam a pele sem vida.',
-      'Aplique com movimentos de tape para melhor cobertura.',
-    ],
-    Neutral: [
-      'Sua pele combina com a maioria das bases médias do mercado.',
-      'Aplique do centro do rosto para fora para cobertura natural.',
-      'Use um pó compacto para fixar e prolongar a durabilidade.',
-      'Misture com hidratante para cobertura leve no dia a dia.',
-    ],
+    Cool: ['Aplique a base em camadas finas para evitar efeito máscara.', 'Use um primer hidratante para manter a pele luminosa.', 'Escolha um corretivo um tom mais claro para a área dos olhos.', 'Finalize com pó translúcido para controle de brilho.'],
+    Warm: ['Hidrate bem a pele antes da aplicação para um acabamento natural.', 'Use uma esponja úmida para uma cobertura mais uniforme.', 'Cuidado para não escolher tons acinzentados que deixam a pele sem vida.', 'Aplique com movimentos de tape para melhor cobertura.'],
+    Neutral: ['Sua pele combina com a maioria das bases médias do mercado.', 'Aplique do centro do rosto para fora para cobertura natural.', 'Use um pó compacto para fixar e prolongar a durabilidade.', 'Misture com hidratante para cobertura leve no dia a dia.'],
   },
   Light: {
-    Cool: [
-      'Combine a base com um corretivo de mesma família de tom.',
-      'Use iluminador suave no alto das bochechas para dimensão.',
-      'Evite bases muito amareladas que podem gerar contraste.',
-      'Aplique com pincel para acabamento mais profissional.',
-    ],
-    Warm: [
-      'Sua pele combina perfeitamente com tons dourados.',
-      'Use uma base líquida para acabamento natural e luminoso.',
-      'Aplique o blush em tons de coral ou pêssego para harmonizar.',
-      'Finalize com spray fixador para longa duração.',
-    ],
-    Neutral: [
-      'Você tem a vantagem de adaptar entre tons frios e quentes.',
-      'Teste a base na linha do maxilar para verificar o tom.',
-      'Use uma esponja para acabamento skin-like.',
-      'Aplique pó apenas na zona T para brilho controlado.',
-    ],
+    Cool: ['Combine a base com um corretivo de mesma família de tom.', 'Use iluminador suave no alto das bochechas para dimensão.', 'Evite bases muito amareladas que podem gerar contraste.', 'Aplique com pincel para acabamento mais profissional.'],
+    Warm: ['Sua pele combina perfeitamente com tons dourados.', 'Use uma base líquida para acabamento natural e luminoso.', 'Aplique o blush em tons de coral ou pêssego para harmonizar.', 'Finalize com spray fixador para longa duração.'],
+    Neutral: ['Você tem a vantagem de adaptar entre tons frios e quentes.', 'Teste a base na linha do maxilar para verificar o tom.', 'Use uma esponja para acabamento skin-like.', 'Aplique pó apenas na zona T para brilho controlado.'],
   },
   Medium: {
-    Cool: [
-      'Bases rosadas ajudam a neutralizar o amarelado natural.',
-      'Use primer com tom lilás para potencializar o efeito.',
-      'Aplique com pincel kabuki para cobertura média a alta.',
-      'O blush em tom rosa médio complementa perfeitamente.',
-    ],
-    Warm: [
-      'Bases douradas realçam a luminosidade natural da sua pele.',
-      'Use um primer com toque iluminador para efeito glow.',
-      'Aplique com esponja úmida para acabamento aveludado.',
-      'Blush em tons de terracota harmoniza com seu tom.',
-    ],
-    Neutral: [
-      'Seu tom de pele é muito versátil — aproveite!',
-      'Alterne entre acabamentos matte e dewy conforme o look.',
-      'Use base em creme para cobertura média natural.',
-      'Finalize com pó solto translúcido para fixação.',
-    ],
+    Cool: ['Bases rosadas ajudam a neutralizar o amarelado natural.', 'Use primer com tom lilás para potencializar o efeito.', 'Aplique com pincel kabuki para cobertura média a alta.', 'O blush em tom rosa médio complementa perfeitamente.'],
+    Warm: ['Bases douradas realçam a luminosidade natural da sua pele.', 'Use um primer com toque iluminador para efeito glow.', 'Aplique com esponja úmida para acabamento aveludado.', 'Blush em tons de terracota harmoniza com seu tom.'],
+    Neutral: ['Seu tom de pele é muito versátil — aproveite!', 'Alterne entre acabamentos matte e dewy conforme o look.', 'Use base em creme para cobertura média natural.', 'Finalize com pó solto translúcido para fixação.'],
   },
   Tan: {
-    Cool: [
-      'Evite bases acinzentadas que podem deixar o tom opaco.',
-      'Use iluminador dourado para realçar a pele.',
-      'Aplique a base em camadas finas e construa a cobertura.',
-      'Blush em tom maçã para um visual saudável.',
-    ],
-    Warm: [
-      'Sua pele tem um brilho natural — destaque com base luminosa.',
-      'Use bronzer no tom certo para realçar ainda mais.',
-      'Aplique com os dedos para melhor derretimento na pele.',
-      'Finalize com spray para efeito fresh o dia todo.',
-    ],
-    Neutral: [
-      'Sua pele morena é perfeita para looks ensolarados.',
-      'Use base com proteção solar para proteção diária.',
-      'Aplique com esponja para acabamento natural.',
-      'Contorno suave valoriza os traços naturais.',
-    ],
+    Cool: ['Evite bases acinzentadas que podem deixar o tom opaco.', 'Use iluminador dourado para realçar a pele.', 'Aplique a base em camadas finas e construa a cobertura.', 'Blush em tom maçã para um visual saudável.'],
+    Warm: ['Sua pele tem um brilho natural — destaque com base luminosa.', 'Use bronzer no tom certo para realçar ainda mais.', 'Aplique com os dedos para melhor derretimento na pele.', 'Finalize com spray para efeito fresh o dia todo.'],
+    Neutral: ['Sua pele morena é perfeita para looks ensolarados.', 'Use base com proteção solar para proteção diária.', 'Aplique com esponja para acabamento natural.', 'Contorno suave valoriza os traços naturais.'],
   },
   Deep: {
-    Cool: [
-      'Evite bases muito claras que criam linha de demarcação.',
-      'Use corretivo laranja para cobrir olheiras profundas.',
-      'Aplique base com pincel denso para cobertura uniforme.',
-      'Finalize com pó compacto translúcido para fixação matte.',
-    ],
-    Warm: [
-      'Bases em tons de caramelo dourado são suas aliadas.',
-      'Use iluminador em tom bronze para realçar a pele.',
-      'Aplique com esponja para melhor aderência.',
-      'Blush em tom coral médio complementa seu tom.',
-    ],
-    Neutral: [
-      'Procure bases com rótulos "for deep skin tones".',
-      'Aplique do centro para fora para acabamento natural.',
-      'Use primer com silicone para melhor aplicação.',
-      'Finalize com spray fixador para longa duração.',
-    ],
+    Cool: ['Evite bases muito claras que criam linha de demarcação.', 'Use corretivo laranja para cobrir olheiras profundas.', 'Aplique base com pincel denso para cobertura uniforme.', 'Finalize com pó compacto translúcido para fixação matte.'],
+    Warm: ['Bases em tons de caramelo dourado são suas aliadas.', 'Use iluminador em tom bronze para realçar a pele.', 'Aplique com esponja para melhor aderência.', 'Blush em tom coral médio complementa seu tom.'],
+    Neutral: ['Procure bases com rótulos "for deep skin tones".', 'Aplique do centro para fora para acabamento natural.', 'Use primer com silicone para melhor aplicação.', 'Finalize com spray fixador para longa duração.'],
   },
 };
 
-export function recommendFoundation(skinTone: SkinToneResult): FoundationResult {
+/**
+ * recommendFoundation — gera resultado de recomendação.
+ * Se receber skinTones do catálogo, usa os dados configurados.
+ * Caso contrário, usa os defaults hardcoded como fallback.
+ */
+export function recommendFoundation(
+  skinTone: SkinToneResult,
+  skinTonesFromCatalog?: SkinToneFromCatalog[]
+): FoundationResult {
   const { undertone, depth, labValues } = skinTone;
 
   // Calculate foundation color from LAB values
-  // Slightly adjust to create a "foundation-like" color (slightly more saturated)
   const foundationL = Math.max(10, Math.min(90, labValues.L));
   const foundationA = labValues.a * 0.8;
   const foundationB = labValues.b * 0.7;
@@ -610,9 +544,14 @@ export function recommendFoundation(skinTone: SkinToneResult): FoundationResult 
   const [r, g, b] = labToRgb(foundationL, foundationA, foundationB);
   const colorHex = rgbToHex(r, g, b);
 
-  const colorName = COLOR_NAMES[depth]?.[undertone] || 'Bege Natural';
-  const description = COLOR_DESCRIPTIONS[depth]?.[undertone] || 'Base recomendada para o seu tom de pele.';
-  const tips = APPLICATION_TIPS[depth]?.[undertone] || APPLICATION_TIPS['Medium']['Neutral'];
+  // Try to find matching skin tone from catalog
+  const match = skinTonesFromCatalog?.find(
+    (t) => t.undertone.toLowerCase() === undertone.toLowerCase() && t.depth.toLowerCase() === depth.toLowerCase()
+  );
+
+  const colorName = match?.colorName || `Base ${undertone === 'Warm' ? 'Dourada' : undertone === 'Cool' ? 'Rosada' : 'Natural'} ${depth === 'Fair' ? 'Muito Clara' : depth === 'Light' ? 'Clara' : depth === 'Medium' ? 'Média' : depth === 'Tan' ? 'Morena' : 'Escura'}`;
+  const description = match?.description || DEFAULT_DESCRIPTIONS[depth]?.[undertone] || 'Base recomendada para o seu tom de pele.';
+  const tips = match?.tips?.length ? match.tips : (DEFAULT_TIPS[depth]?.[undertone] || DEFAULT_TIPS['Medium']['Neutral']);
 
   return {
     colorHex,
