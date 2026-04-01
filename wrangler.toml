@@ -1,9 +1,14 @@
 name = "base-perfeita"
 compatibility_date = "2024-12-01"
 compatibility_flags = ["nodejs_compat"]
+pages_build_output_dir = ".vercel/output/static"
 
 # KV namespace para o catálogo
-# IMPORTANTE: No Cloudflare Pages, este arquivo é apenas referência.
 # O binding real é configurado no Dashboard do Cloudflare:
 # Settings → Functions → KV namespace bindings
 # Variable name: CATALOG_KV → KV namespace que você criou
+#
+# Dica: Você também pode configurar o binding aqui:
+# [[kv_namespaces]]
+# binding = "CATALOG_KV"
+# id = "SEU_KV_NAMESPACE_ID"
